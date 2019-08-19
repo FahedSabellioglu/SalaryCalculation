@@ -1,0 +1,9 @@
+2019 YILININ PARAMETRELER�
+Damga Vergisi Y�zdesi:0.00759
+SGK  İşveren Pay� Y�zdesi:0.205
+SGK İşveren ��sizlik Y�zdesi:0.02
+SGK ���i Pay� Y�zdesi:0.14
+SGK ���i ��sizlik Y�zdesi:0.01
+Esas �cret Taban S�n�r�:2558.40	
+Esas �cret Tavan S�n�r�: 19188.00 
+

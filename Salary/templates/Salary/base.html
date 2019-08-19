@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--    <meta charset="UTF-8">-->
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+
+    <title>Mazars Denge</title>
+    {% load staticfiles%}
+
+    <link rel="stylesheet" href="{% static 'Salary/bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'Salary/bootstrap/js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'Salary/bootstrap/js/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" href ="{% static 'Salary/bootstrap/css/customCss.css' %}"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+</head>
+<body>
+        {% include 'Salary/navBar.html' %}
+
+        <div class="jumbotron jumbotron-fluid" style="padding: 2rem 1rem;margin-bottom:1rem;">
+                <div class="container">
+                        <div class="row">
+                                <div class="col-lg-4 col-md-12">
+                                        <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                  <label class="input-group-text" for="SalaryTypeSelect">Salary Type</label>
+                                                </div>
+                                                <select class="custom-select" id="SalaryTypeSelect">
+                                                  <option value="0" selected>Gross To Net</option>
+                                                  <option value="1">Net To Gross</option>
+                                                </select>
+                                        </div>
+                                </div>
+                                <div class="col-lg-4 col-md-12">
+                                        <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                  <label class="input-group-text" for="SocialStatusSelect">Social Status</label>
+                                                </div>
+                                                <select class="custom-select" id="SocialStatusSelect">
+                                                  <option value="0" selected>Single</option>
+                                                  <option value="1">Married</option>
+                                                </select>
+                                        </div>
+                                </div>
+                                <div class="col-lg-4 col-md-12">
+                                        <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                  <label class="input-group-text" for="YearSelect">Year</label>
+                                                </div>
+                                                <select class="custom-select" id="YearSelect">
+                                                  <option value="2019" selected>2019</option>
+                                                  <option value="2018">2018</option>
+                                                  <option value="2017">2017</option>
+                                                  <option value="2016">2016</option>
+                                                </select>
+                                        </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row" style="display: none;" id="Married">
+                                    <div class="col">
+                                            <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                      <label class="input-group-text" for="PartnerStatus">Does Your Partner Work?</label>
+                                                    </div>
+                                                    <select class="custom-select" id="PartnerStatus">
+                                                      <option value="0" selected>No</option>
+                                                      <option value="1">Yes</option>
+                                                    </select>
+                                            </div>
+                                    </div>
+                                    <div class="col">
+                                            <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                      <label class="input-group-text" for="ChildrensCount">Children Count.</label>
+                                                    </div>
+                                                    <select class="custom-select" id="ChildrensCount">
+                                                      <option value="0" selected>0</option>
+                                                      <option value="1">1</option>
+                                                      <option value="2">2</option>
+                                                      <option value="3">3</option>
+                                                      <option value="4">4</option>
+                                                      <option value="5">5+</option>
+                                                    </select>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-12">
+                                            <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                      <div class="input-group-text">
+                                                        <input type="checkbox" id="empCost" aria-label="Checkbox for following text input">
+                                                      </div>
+                                                    </div>
+                                                    <input style="background-color:#fff" type="text" class="form-control" aria-label="Text input with checkbox"
+                                                    value="Show Employer's Cost." readonly>
+                                            </div>
+                                    </div>
+                                    <div class="col-lg-8 col-md-12">
+                                            <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                      <div class="input-group-text">
+                                                        <input type="checkbox" id="empSocialShare" aria-label="Checkbox for following text input">
+                                                      </div>
+                                                    </div>
+                                                    <input style="background-color:#fff" type="text" class="form-control" aria-label="Text input with checkbox"
+                                                    value="Take Employer's Share Of Social Security Premium Into Consideration." readonly>
+                                            </div>
+                                    </div>
+                                </div>
+                            <div class="row">
+                                <div class="col" id="imgDiv" style="display:none;">
+                                    <a href="DownloadFile">
+                                        <img src="{% static 'Salary/images/excel-logo.png' %}" height="40px" id="downloadExcel" title="Download as Excel" />
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <div class="float-right">
+                                        <button class="btn btn-block " id="CalBtn" style="background-color: #036; color: white">Calculate</button>
+                                    </div>
+                                </div>
+                            </div>
+                </div>
+
+        </div>
+
+
+
+    {% block content %}
+    {% endblock %}
+
+    <div id="ModalBody" >
+
+    </div>
+
+
+    <script src="{% static 'Salary/SocialStatusControl.js' %}"></script>
+    <script src="{% static 'Salary/Calculate.js' %}"></script>
+    <script src="{% static 'Salary/operationType.js' %}"></script>
+    <script src="{% static 'Salary/parameters.js' %}"></script>
+    <script>
+        function InputControl(id){
+                selectedElement = $('#'+id);
+                $('td input').each(function(){
+                    if($(this).attr('id') > id ){
+                        $(this).val(selectedElement.val())
+                    }
+
+
+                })
+
+        }
+
+    </script>
+
+
+
+</body>
+</html>

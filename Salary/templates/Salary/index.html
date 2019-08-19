@@ -1,0 +1,27 @@
+{% extends 'Salary/base.html' %}
+
+{% block content %}
+    <div class="table-responsive" id="resultTable">
+                    <table class="table" style="widows: auto">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Month</th>
+                                <th style="width:10%" id="ConvertFrom">Gross</th>
+                                <th style="width: 13%">Total Prim</th>
+                                <th style="width: 14%">Cumulative Income Base</th>
+                                <th style="width: 13%">Income Tax</th>
+                                <th style="width: 13%">Stamp Tax</th>
+                                <th style="width: 3%" id="ConvertTo">Net</th>
+                                <th style="width: 3%">Agi</th>
+                                <th style="width: 13%">Total Salary</th>
+                                <th style="width: 17%">Total Cost For Employer</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                {% include 'Salary/table.html' %}
+                            </tbody>
+                    </table>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,21 @@
+.menu-right{
+  float: right;
+}
+
+.nav-item{
+  margin-left: 5px;
+}
+
+
+@media only screen and (max-width: 480px)
+{
+  .menu-right{
+    float: left;
+  }
+  .appTitle{
+    display: none;
+  }
+  .nav-item{
+    margin-top: 5px;
+  }
+}

@@ -1,0 +1,16 @@
+minimum agi:191.88
+maximum agi:326.20
+bekar:191.88
+evli, çalýþmayan eþ, 0 çocuk:230.26
+evli, çalýþmayan eþ, 1 çocuk:259.04
+evli, çalýþmayan eþ, 2 çocuk:287.82
+evli, çalýþmayan eþ, 3 çocuk:326.20
+evli, çalýþmayan eþ, 4 çocuk:326.20
+evli, çalýþmayan eþ, 5 çocuk:326.20
+evli, çalýþan eþ, 0 çocuk:191.88
+evli, çalýþan eþ, 1 çocuk:220.66
+evli, çalýþan eþ, 2 çocuk:249.44
+evli, çalýþan eþ, 3 çocuk:287.82
+evli, çalýþan eþ, 4 çocuk:307.01
+evli, çalýþan eþ, 5 çocuk:326.20
+ 
