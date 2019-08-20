@@ -1,0 +1,9 @@
+2019 YILININ PARAMETRELERÝ
+Damga Vergisi Yüzdesi:0.00759
+SGK Ýþveren Payý Yüzdesi:0.205
+SGK Ýþveren Ýþsizlik Yüzdesi:0.02
+SGK Ýþçi Payý Yüzdesi:0.14
+SGK Ýþçi Ýþsizlik Yüzdesi:0.01
+Esas Ücret Taban Sýnýrý:2558.40	
+Esas Ücret Tavan Sýnýrý: 19188.00 
+

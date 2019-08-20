@@ -1,4 +1,4 @@
-        $("#CalBtn").on("click",function(){
+$("#CalBtn").on("click",function(){
 
 
 //        <!-- Users Parameters -->
@@ -21,7 +21,6 @@
                 }
             });
 
-            console.log("_----------------------------------")
             if(Object.keys(values).length==0)
             {
                 alert("Please fill at least one field.")
@@ -40,18 +39,18 @@
                     usrParameters['kidsCount'] = kidsCount;
                 }
 
-                console.log('---------------------------------')
-                console.log(usrParameters)
                 $.ajax({
 
-                    url:'salary/calculation',
+                    url:'calculation',
                     data:usrParameters,
                     dataType:'json',
                     success: function(data){
                         $("#tableBody").html(data.html_form);
                         $("#imgDiv").show();
                     },
-                    error: function(){alert("Try Again Later")}
+                    error: function(){
+                        alert("Something went wrong, Please try again later.")
+                        }
 
                 });
 
@@ -59,4 +58,4 @@
 
         //        <!--         -->
 
-        });
+});

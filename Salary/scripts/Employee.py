@@ -12,6 +12,9 @@ from openpyxl.styles import Font, Alignment
 from openpyxl.drawing.image import Image
 
 DirecPath = "Salary/scripts/"
+agiFilepath = "agiData/agi"
+gelirvergisi = "gelirvergisi/gelirvergisi"
+parameterpath = "parameter/parameter"
 
 
 
@@ -56,7 +59,7 @@ class Employee:
     # Functions of 'Employee' class ------------------------------------------------------------
     # parameters that are written in the file is read
     def readParameter(self, line_number):
-        file = open(DirecPath+'parametre2019.txt', mode='r')  # a file with name parametre2019.txt is opened
+        file = open(DirecPath+parameterpath+'2019.txt', mode='r')  # a file with name parameter2019.txt is opened
         lines = file.read().split('\n')  # split lines
         words = lines[line_number].split(':')  # split words which divided by ':'
         value = float(words[1])  # assign the value that comes after ':'
@@ -116,7 +119,7 @@ class Employee:
 
     # read percentages and limits from the file with name as gelirvergisi2019.txt
     def readIncomeTaxPct(self):
-        file = open(DirecPath+'gelirvergisi2019.txt', mode='r')
+        file = open(DirecPath+gelirvergisi+'2019.txt', mode='r')
         lines = file.read().split('\n')
         for line_number in range(4):  # there are always 4 limit. And txt file also has 4 lines.
             words = lines[line_number].split(':')  # split the words in an exact line_number divided by ':'
@@ -195,7 +198,7 @@ class Employee:
 
     # read value from the file with name agi2019.txt
     def readAgi(self, line_number):
-        file = open(DirecPath+'agi2019.txt', mode='r')
+        file = open(DirecPath+agiFilepath+'2019.txt', mode='r')
         lines = file.read().split('\n')  ##split lines
         words = lines[line_number].split(':')  # split words which divided by ':'
         value = float(words[1])  # the name is written at the 0 index. the value is written at the 1 index
@@ -302,7 +305,7 @@ class Employee:
 
     # a function to open a file with name hesaplama.txt to write just titles
     def openFile(self, __gross_to_net, __net_to_gross):
-        file = open('hesaplama.txt', mode='w')
+        file = open(DirecPath+'Results/hesaplama.txt', mode='w')
         if __gross_to_net == 1:
             file.write(
                 "Month\tGross\t\tTotal Prim\tCumulative Income Base\tIncome Tax\t\tStamp Tax\t\tNet\t\tAgi\t\tTotal Salary\tTotal Cost for Employer\n")
@@ -314,7 +317,7 @@ class Employee:
     # a function to save results to a file with name hesaplama.txt
     def saveToFile(self):
         self.openFile(self.__gross_to_net, self.__net_to_gross)  # a func is invoked to prepare file
-        file = open('hesaplama.txt', mode='a')
+        file = open(DirecPath+'Results/hesaplama.txt', mode='a')
         self.month_names = {
             1: "Jan",
             2: "Feb",
@@ -329,10 +332,6 @@ class Employee:
             11: "Nov",
             12: "Dec"
         }
-
-
-
-
 
         for month in self.__salary.keys():  # it goes for 12 times (12 months)
             self.calculate(month)  # a func is invoked to calculate for each months salary
@@ -474,7 +473,7 @@ class Employee:
 
             data_row += 1
 
-        wb.save(DirecPath+"ExcelFolders/Mazars_Gross_Net_Calculation.xlsx")
+        wb.save(DirecPath+"Results/Mazars_Gross_Net_Calculation.xlsx")
 
 
     # a func to find boss cost. if boss_cost flag is 0, it returns 0.0

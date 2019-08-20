@@ -4,7 +4,7 @@ $(".dropdown-item").on("click",function(){
 
     $.ajax({
 
-        url:'salary/paremeter',
+        url:'parameter',
         data: {'year':selectedYear},
         dataType:'json',
         success: function(data){
@@ -13,7 +13,10 @@ $(".dropdown-item").on("click",function(){
             $("#exampleModalLong").modal('show');
             },
 
-        error: function(data){console.log(data)}
+        error: function(data){
+
+                alert("Something went wrong, Please try again later")
+            }
 
     })
    });
