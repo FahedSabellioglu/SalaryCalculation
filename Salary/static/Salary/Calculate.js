@@ -14,12 +14,26 @@ $("#CalBtn").on("click",function(){
         //        <!-- Salaries Control -->
 
             var values = {};
+            var can_pass = true
             $('td input').each(function(){
-                if($(this).val()!="")
+
+                if(parseFloat($(this).val())<2558.4)
+                {
+                    can_pass = false
+                    alert("The min value you can enter is 2558.4")
+                    return false
+                }
+
+                else if($(this).val()!="")
                 {
                     values[$(this).attr('name')] = parseFloat($(this).val());
                 }
             });
+
+            if (can_pass==false)
+            {
+                return false
+            }
 
             if(Object.keys(values).length==0)
             {

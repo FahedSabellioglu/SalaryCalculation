@@ -10,6 +10,7 @@ Intrapreneurship Mazars Denge'''
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment
 from openpyxl.drawing.image import Image
+import calendar
 
 DirecPath = "Salary/scripts/"
 agiFilepath = "agiData/agi"
@@ -74,8 +75,6 @@ class Employee:
         self.__marital_status = marital_status
         self.__partner_status = partner_status
         self.__kids_count = kids_count
-        self.defineAgi()
-        self.readSalaries(salaries_dict)
 
         # these are the parameters read from parameter.txt file:
         self.stamp_tax_pct = self.readParameter(1)
@@ -86,12 +85,19 @@ class Employee:
         self.__basic_fee_min = self.readParameter(6)
         self.__basic_fee_max = self.readParameter(7)
 
+        val =self.readSalaries(salaries_dict)
+        if val: self.defineAgi()
+
+
+
 
     def readSalaries(self,salaries_dictionary):
-
         temp = 0.0
         for i in range(1,13): # for each month
-            if i in salaries_dictionary: # if the month's salary is given
+            if float(salaries_dictionary[i])<self.__basic_fee_min:
+                return False
+
+            elif i in salaries_dictionary: # if the month's salary is given
                 temp = salaries_dictionary[i]
                 continue
             else:
@@ -101,6 +107,7 @@ class Employee:
                     salaries_dictionary[i] = temp # set it to the value of the previous month
 
         self.__salary.update(salaries_dictionary)
+        return True
 
 
     # to get salary from employee. It's invoked in saveToFile func for 12 times
@@ -314,6 +321,10 @@ class Employee:
                 "Month\tNet\t\tTotal Prim\tCumulative Income Base\tIncome Tax\t\tStamp Tax\t\tGross\t\tAgi\t\tTotal Salary\tTotal Cost for Employer\n")
         file.close()
 
+    def roundValues(self,data_list):
+        return [round(v,2) for v in data_list]
+
+
     # a function to save results to a file with name hesaplama.txt
     def saveToFile(self):
         self.openFile(self.__gross_to_net, self.__net_to_gross)  # a func is invoked to prepare file
@@ -335,24 +346,27 @@ class Employee:
 
         for month in self.__salary.keys():  # it goes for 12 times (12 months)
             self.calculate(month)  # a func is invoked to calculate for each months salary
-            self.data[month] = [ self.__prim, self.__cumul_base[
+            self.data[self.month_names[month]] = [ self.__prim, self.__cumul_base[
                     month], self.__income_tax, self.__stamp_tax, self.__agi, self.__total_salary,
                 self.findBossCost(month)]
+
                 # 0 and 5th index
             if self.__gross_to_net == 1:
                 file.write("%s\t%f\t%f\t%f\t\t%f\t\t%f\t\t%f\t%f\t%f\t%f\n" % (
                 self.month_names[month], self.__gross, self.__prim, self.__cumul_base[
                     month], self.__income_tax, self.__stamp_tax, self.__net, self.__agi, self.__total_salary,
                 self.findBossCost(month)))
-                self.data[month].insert(0,self.__gross)
-                self.data[month].insert(5,self.__net)
+                self.data[self.month_names[month]].insert(0,self.__gross)
+                self.data[self.month_names[month]].insert(5,self.__net)
             elif self.__net_to_gross == 1:
                 file.write("%s\t%f\t%f\t%f\t\t%f\t\t%f\t\t%f\t%f\t%f\t%f\n" % (
                 self.month_names[month], self.__net, self.__prim, self.__cumul_base[
                     month], self.__income_tax, self.__stamp_tax, self.__gross, self.__agi, self.__total_salary,
                 self.findBossCost(month)))
-                self.data[month].insert(0,self.__net)
-                self.data[month].insert(5,self.__gross)
+                self.data[self.month_names[month]].insert(0,self.__net)
+                self.data[self.month_names[month]].insert(5,self.__gross)
+
+            self.data[self.month_names[month]] = self.roundValues(self.data[self.month_names[month]])
         file.close()
 
         self.saveToExcel()

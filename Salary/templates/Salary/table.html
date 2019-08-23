@@ -1,33 +1,22 @@
 
-
-
-
 {% if result != Null %}
-
-    {% with 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec' as monthNames %}
     {% for month,value in result.items %}
             <tr class="text-center">
                     <th scope="row">{{month}}</th>
                     <td>
-                        <input class="InputItems"  onkeyup="InputControl({{forloop.counter}})"  id="{{forloop.counter}}"  data-name="{{forloop.counter}}"  name="{{forloop.counter}}" type="number"  value="{{value.0}}">
+                        <input class="InputItems"  onkeyup="InputControl({{forloop.counter}})"
+                               id="{{forloop.counter}}"  data-name="{{forloop.counter}}"  name="{{forloop.counter}}"
+                               type="number"  value="{{value.0}}"
+                        >
                     </td>
                 {% for v in value %}
                     {% if forloop.counter != 1 %}
                         <td>{{v}}</td>
                     {% endif %}
-<!--                    <td>0</td>-->
-<!--                    <td>0</td>-->
-<!--                    <td>0</td>-->
-<!--                    <td>0</td>-->
-<!--                    <td>0</td>-->
-<!--                    <td>0</td>-->
-<!--                    <td>0</td>-->
                 {% endfor %}
 
             </tr>
     {% endfor %}
-    {% endwith %}
-
 
 {% else %}
     {% with 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec' as monthNames %}
@@ -35,7 +24,9 @@
             <tr>
                     <th scope="row">{{month}}</th>
                     <td>
-                        <input class="InputItems" onkeyup="InputControl({{forloop.counter}})"  id="{{forloop.counter}}" name="{{forloop.counter}}" type="number">
+                        <input  class="InputItems" onkeyup="InputControl({{forloop.counter}})"
+                                id="{{forloop.counter}}" name="{{forloop.counter}}" type="number"
+                        >
                     </td>
                     <td></td>
                     <td></td>
