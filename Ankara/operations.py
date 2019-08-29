@@ -1,25 +1,24 @@
 from openpyxl import load_workbook,Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
-from openpyxl.styles import NamedStyle
 from pandas import DataFrame
 from openpyxl.styles import Font
-from pywintypes import com_error
-import win32com.client
-import numpy as np
+from numpy import NaN as NaN
 import os
 import time
 import excel
-
+import datetime
 
 __author__ = "Fahed Sabellioglu"
 
 class Excel:
     __nrows = 0
 
-    def __init__(self,files,path):
+    def __init__(self,files,path,saveAs):
         self.files = files
         self.path = path
+        self.saveAs = saveAs
         self.dfs = DataFrame()
+
 
     def loadFiles(self):
         counter = 1
@@ -28,7 +27,6 @@ class Excel:
             sheet_name =open_workbook.sheetnames[0]
 
             ws = open_workbook[sheet_name]
-
 
             excelData = list(ws.values)  # getting the data inside the sheet
             titles = list(excelData[0]) # getting only the first item (titles)
@@ -40,8 +38,12 @@ class Excel:
             df.rename(columns = {'Şube':"Balance"},inplace=True)
 
             # dropping the unneeded columns
-            self.deleteColumns(['Stok Kodu','Sıralama','Belge Türü','Belge Türü Açıklaması',
-                                'Masraf Merkezi','COLUMN1','Yevmiye No','Fiş Türü'],df)
+            try:
+                self.deleteColumns(['Stok Kodu','Sıralama','Belge Türü','Belge Türü Açıklaması',
+                                    'Masraf Merkezi','COLUMN1','Yevmiye No','Fiş Türü'],df)
+            except KeyError:
+                open_workbook.close()
+                raise KeyError
 
 
             df.insert(0,'identifier',counter)
@@ -66,7 +68,6 @@ class Excel:
             df.drop(labels=delete_indexes,inplace=True)
 
 
-
             # append the temporary dataframe to the main dataframe
             self.dfs = self.dfs.append(df,ignore_index=True)
 
@@ -75,18 +76,18 @@ class Excel:
         self.__nrows = len(self.dfs.index)
 
         # change NaNs into 0 to do the calculations
-        self.replace_column(['Borç Tutarı', 'Alacak Tutarı'], np.NAN, 0,self.dfs)
+        self.replace_column(['Borç Tutarı', 'Alacak Tutarı'], NaN, 0,self.dfs)
 
         # performing Balance = Borc Tutari - Alacak Tutari
         self.dfs["Balance"] = self.dfs[['Borç Tutarı','Alacak Tutarı']].apply(lambda x:x[0]-x[1],axis=1)
 
-        self.replace_column(['Borç Tutarı','Alacak Tutarı'],np.NAN,0,self.dfs) # remove nan from the columns
+        self.replace_column(['Borç Tutarı','Alacak Tutarı'],NaN,0,self.dfs) # remove nan from the columns
 
         # apply the function => if balance >=0 return doviz tutari else: return 0
         self.dfs["PV Döviz"] = self.dfs[["Balance",'Döviz Tutarı']].apply(self.pv_doviz,axis=1)
 
         #replacing Nans with zero
-        self.replace_column(["PV Döviz"],np.NAN,0,self.dfs)
+        self.replace_column(["PV Döviz"],NaN,0,self.dfs)
 
         # fill C1 and C3 with the manipulation of Hesap Kodu
         account_codes = list(self.dfs['Hesap Kodu'])
@@ -94,7 +95,7 @@ class Excel:
         self.dfs.insert(2,'C3',[value.split(".")[0] for value in account_codes])
 
         # format the date from long to short date
-        self.dfs[['Fiş Tarihi','Evrak Tarihi']] = self.dfs[['Fiş Tarihi','Evrak Tarihi']].apply(lambda x: x.dt.strftime('%m/%d/%Y'))
+        self.dfs[['Fiş Tarihi','Evrak Tarihi']] = self.dfs[['Fiş Tarihi','Evrak Tarihi']].apply(lambda x: x.dt.strftime('%d/%m/%Y'))
 
         self.dfs = self.dfs.reset_index(drop=True)
 
@@ -109,8 +110,6 @@ class Excel:
         # save the sheet
         self.saveToSheet(self.dfs,ws)
 
-        date_style = NamedStyle(name='datetime', number_format='YYYY-MM-DD')
-        self.cells_format(['F','H'],date_style,ws)
         self.cells_format(['K',"L",'M',"O",'P'],'Comma',ws)
 
         path = os.path.join(self.path,"Results.xlsx")
@@ -120,7 +119,8 @@ class Excel:
         self.CreatePivot(path)
 
     def CreatePivot(self,file_path):
-        excel.Pivot(self.path)
+
+        excel.Pivot(self.path,self.saveAs)
 
         os.remove(file_path)
 
@@ -147,6 +147,12 @@ class Excel:
         else:
             return -x[1]
 
+    def time_formart(self,sheet):
+        for row in range(2,self.__nrows+1):
+            for col in ['F','H']:
+                dttm = datetime.datetime.strptime(sheet[col+str(row)].value, "%d/%m/%Y")
+                sheet[col+str(row)].value = dttm
+
     def cells_format(self,column_list,formatType,sheet):
         for row in range(2,self.__nrows+1):
             for col in column_list:
@@ -161,39 +167,6 @@ class Excel:
         for name in names_list:
             del df[name]
 
-def excelCheck():
-    try:
-        win32com.client.GetActiveObject("Excel.Application")
-        os.system("taskkill /f /im Excel.exe")
-    except com_error:
-        pass
-
-def delete_excel(dirc_path,name):
-    file_path = os.path.join(dirc_path,name)
-    os.remove(file_path)
-
-def calcualte(path):
-    direc_files = os.listdir(path)
-    excelCheck()
-    time.sleep(0.5)
-    try:
-        if 'Results.xlsx' in direc_files:
-            delete_excel(path,'Results.xlsx')
-        if 'Final.xlsx' in direc_files:
-            delete_excel(path,'Final.xlsx')
-
-        files_path = [os.path.join(path,file_name) for file_name in direc_files if file_name.split(".")[-1]=="xlsx" and ('Results' and 'Final' not in file_name)]
-
-        ExcelObject = Excel(files_path,path)
-        ExcelObject.loadFiles()
-
-        return 1
-    except Exception as E:
-        return E
-
-flag  = calcualte(r'C:\Users\Fahed Sabellioglu\Desktop\data')
-
-print (flag)
 
 
 
