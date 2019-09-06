@@ -86,29 +86,28 @@ class GUI(Frame):
 
 
     def ChooseDirec(self,opType):
-        print ('1')
+
         self.count.config(text='')
-        print ('2')
+
 
         if opType == 1:
-            print ('3')
-            #self.company_name.delete(0,END)
-            #self.balance_date.delete(0,END)
+  
+            self.company_name.delete(0,END)
+            self.balance_date.delete(0,END)
             self.fileDialog = tkFileDialog.askdirectory(title = 'Select a Directory:')
-            #self.fileDialog = tkFileDialog.askdirectory(title = "Select a Directory:")
-            print ('222')
+    
         elif opType == 0:
             self.fileDialog = tkFileDialog.askopenfilename(title = "Select An Excel File",filetypes=[("Excel files", "*.xlsx")])
             self.direc_path = os.path.dirname(self.fileDialog)
-            print ('4')
+            
 
             self.file_name = os.path.basename(self.fileDialog)
-        print ('5')
+        
 
         self.DirecPath.config(state='normal')
         self.DirecPath.delete(0,END)
         self.DirecPath.insert(END,self.fileDialog)
-        print ('6')
+        
 
         if opType == 1:
             self.getFiles()
@@ -231,7 +230,6 @@ class GUI(Frame):
             self.error_state()
             Msg.showwarning('Notice',"The input file "+ str(E) + " does not follow the accepted format.")
         except ValueError as E:
-            print(E)
             self.error_state()
             Msg.showwarning('Notice',"The input file "+str(E)+" does not follow the accepted format.")
         except PermissionError as E:
