@@ -165,7 +165,11 @@ class GUI(Frame):
             elif opType == 0:
                 pattern = re.compile("^[0-9]{2}.[0-9]{2}.[0-9]{4}$")
 
-                if (self.company_name.get().strip()==""):
+                if os.path.isdir(self.fileDialog):
+                    Msg.showwarning('Wrong Path',"The chosen path if not compatible with the operation, please check and try again.")
+                    return 
+
+                elif (self.company_name.get().strip()==""):
                     Msg.showwarning("Notice","You can't leave the company name field empty.")
 
                 elif (pattern.search(self.balance_date.get())==None):
